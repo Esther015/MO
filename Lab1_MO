@@ -1,0 +1,99 @@
+#include <iostream>
+#include <Windows.h>
+#include <locale>
+
+using namespace std;
+
+double f(double x)
+{
+    return  2*x * x -2*x + 5/2 ;
+}
+
+void swann_method(double x0, double t)
+{
+    // Вычисляем значения функции
+    cout << "x0=0; t=1" << endl;
+    cout << "f(x0 - t) = " << f(x0 - t) << endl;
+    cout << "f(x0) = " << f(x0) << endl;
+    cout << "f(x0 + t) = " << f(x0 + t) << endl;
+
+    // Определяем направление движения
+
+    double direction;
+
+    if (f(x0 + t) < f(x0))
+    {
+        direction = 1;   // вправо
+    }
+    else if (f(x0 - t) < f(x0))
+    {
+        direction = -1;  // влево
+    }
+    else
+    {
+        cout << "Интервал: ["
+            << x0 - t << "; "
+            << x0 + t << "]" << endl;
+
+        return;
+    }
+
+    double x_prev = x0;
+    double x_curr = x0 + direction * t;
+
+    double step = t;
+
+    int k = 1;
+
+    cout << "x0 = " << x_prev
+        << ", f(x0) = " << f(x_prev) << endl;
+
+    cout << "x1 = " << x_curr
+        << ", f(x1) = " << f(x_curr) << endl;
+
+    while (true)
+    {
+        step *= 2;
+
+        double x_next = x_curr + direction * step;
+
+        cout << "x" << k + 1 << " = " << x_next
+            << ", f(x" << k + 1 << ") = "
+            << f(x_next) << endl;
+
+        // Условие остановки
+
+        if (f(x_next) >= f(x_curr))
+        {
+            if (direction == 1)
+                cout << "Интервал: ["
+                << x_prev << "; " << x_next << "]"
+                << endl;
+            else
+                cout << "Интервал: ["
+                << x_next << "; " << x_prev << "]"
+                << endl;
+
+            return;
+        }
+
+        // Сдвигаемся
+
+        x_prev = x_curr;
+        x_curr = x_next;
+
+        k++;
+    }
+}
+
+int main()
+{
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+
+    setlocale(LC_ALL, "ru");
+
+    swann_method(0, 1);
+
+    return 0;
+}
