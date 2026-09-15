@@ -1,70 +1,72 @@
-(ns koans.02-strings
-  (:require [koan-engine.core :refer :all]
-            [clojure.string :as string]))
+Z:\>cd Downloads
 
-(meditations
-  "A string is nothing more than text surrounded by double quotes"
-  (= __ "hello")
+Z:\Downloads>java -jar clojure-1.8.0.jar
+Clojure 1.8.0
+user=> (= \C (get "Characters" 0))
+true
+user=> (= 11 (count "Hello World"))
+true
+user=> (= false (= \c "c"))
+true
+user=> (= "World" (subs "Hello World" 7 11))
+false
+user=> (= "World" (subs "Hello World" 6 11))
+true
+user=> (= 123 (string/join '(1 2 3)))
+CompilerException java.lang.RuntimeException: No such namespace: string, compiling:(NO_SOURCE_PATH:6:8)
+user=> (= "123" (string/join '(1 2 3)))
+CompilerException java.lang.RuntimeException: No such namespace: string, compiling:(NO_SOURCE_PATH:7:10)
+user=> (= "1, 2, 3" (string/join "," '(1 2 3)))
+CompilerException java.lang.RuntimeException: No such namespace: string, compiling:(NO_SOURCE_PATH:8:14)
+user=> (= "1, 2, 3" (clojure.string/join "," '(1 2 3)))
+false
+user=> (= "1, 2, 3" (clojure.string/join ", " '(1 2 3)))
+true
+user=> (= "123" (clojure.string/join '(1 2 3)))
+true
+user=> (= ["1" "2" "3"] (clojure.string/split-lines "1\n2\n3"))
+true
+user=> (= "olleh" (clojure.string/reverse "hello"))
+true
+user=> (= 0 (clojure.string/index-of "hello world" "h"))
+true
+user=> (= 13 (clojure.string/last-index-of "hello world, hello" "hello"))
+true
+user=> (= nil (clojure.string/index-of "hello world" "bob"))
+true
+user=> (= "hello world" (clojure.string/trim "  \nhello world \t \n"))
+true
 
-  "But double quotes are just magic on top of something deeper"
-  (= __ (str 'world))
+user=> (= true (char? \c))
+true
+user=> (= true (char? "a"))
+false
+user=> (= false (char? "a"))
+true
+user=> (= false (string? \b))
+true
+user=> (= true (string? "Lys"))
+true
+user=> (= true (string/blank? ""))
+CompilerException java.lang.RuntimeException: No such namespace: string, compiling:(NO_SOURCE_PATH:6:9)
+user=> (= true (clojure.string/blank? ""))
+true
+user=> (= true (string/blank? " \n \t  "))
+CompilerException java.lang.RuntimeException: No such namespace: string, compiling:(NO_SOURCE_PATH:8:9)
+user=> (= true (clojure.string/blank? " \n \t  "))
+true
+user=> (= false (string/blank? "hello?\nare you out there?")))
+CompilerException java.lang.RuntimeException: No such namespace: string, compiling:(NO_SOURCE_PATH:10:10)
+RuntimeException Unmatched delimiter: )  clojure.lang.Util.runtimeException (Util.java:221)
+user=> (= false (clojure.string/blank? "hello?\nare you out there?")))
+true
+RuntimeException Unmatched delimiter: )  clojure.lang.Util.runtimeException (Util.java:221)
+user=>
 
-  "You can do more than create strings, you can put them together"
-  (= "Cool right?" (str __ __))
 
-  "You can even get certain characters"
-  (= \C (get "Characters" __))
 
-  "Or even count the characters"
-  (= __ (count "Hello World"))
 
-  "But strings and characters are not the same"
-  (= __ (= \c "c"))
 
-  "What if you only wanted to get part of a string?"
-  (= "World" (subs "Hello World" __ __))
+33333333333333333333333333333333333333333333
 
-  "How about joining together elements in a list?"
-  (= __ (string/join '(1 2 3)))
 
-  "What if you wanted to separate them out?"
-  (= "1, 2, 3" (string/join __ '(1 2 3)))
-
-  "Maybe you want to separate out all your lines"
-  (= [__ __ __] (string/split-lines "1\n2\n3"))
-
-  "You may want to make sure your words are backwards"
-  (= __ (string/reverse "hello"))
-
-  "Maybe you want to find the index of the first occurrence of a substring"
-  (= 0 (string/index-of "hello world" __))
-
-  "Or maybe the last index of the same substring"
-  (= __ (string/last-index-of "hello world, hello" "hello"))
-
-  "But when something doesn't exist, nothing is found"
-  (= __ (string/index-of "hello world" "bob"))
-
-  "Sometimes you don't want whitespace cluttering the front and back"
-  (= __ (string/trim "  \nhello world \t \n"))
-
-  "You can check if something is a char"
-  (= __ (char? \c))
-
-  "But it may not be"
-  (= __ (char? "a"))
-
-  "But chars aren't strings"
-  (= __ (string? \b))
-
-  "Strings are strings"
-  (= true (string? __))
-
-  "Some strings may be blank"
-  (= __ (string/blank? ""))
-
-  "Even if at first glance they aren't"
-  (= __ (string/blank? " \n \t  "))
-
-  "However, most strings aren't blank"
-  (= __ (string/blank? "hello?\nare you out there?")))
