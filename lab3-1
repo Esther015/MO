@@ -15,7 +15,7 @@ double golden_section(double a, double b, double l, int& N)
 {
     N = 0;
 
-    double fi = 0.38196;
+    double fi = 0.38196;// малая часть
 
     double y = a + fi * (b - a);
     double z = a + b - y;
