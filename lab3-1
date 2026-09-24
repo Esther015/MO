@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// Функция, минимум которой ищем
+// Функция
 double f(double x)
 {
     return 2.0 * x * x - 2.0 * x + 2.5;
@@ -15,9 +15,9 @@ double golden_section(double a, double b, double l, int& N)
 {
     N = 0;
 
-    double k = 0.38196;
+    double fi = 0.38196;
 
-    double y = a + k * (b - a);
+    double y = a + fi * (b - a);
     double z = a + b - y;
 
     double fy = f(y);
