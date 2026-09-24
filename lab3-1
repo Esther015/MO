@@ -1,0 +1,111 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+// Функция, минимум которой ищем
+double f(double x)
+{
+    return 2.0 * x * x - 2.0 * x + 2.5;
+}
+
+// Метод золотого сечения
+double golden_section(double a, double b, double l, int& N)
+{
+    N = 0;
+
+    double k = 0.38196;
+
+    double y = a + k * (b - a);
+    double z = a + b - y;
+
+    double fy = f(y);
+    double fz = f(z);
+
+    while (true)
+    {
+        cout << "\nИтерация " << N + 1 << endl;
+
+        cout << "a = " << a << ", b = " << b << endl;
+
+        cout << "y = " << y << ", f(y) = " << fy << endl;
+        cout << "z = " << z << ", f(z) = " << fz << endl;
+
+        // Сравниваем значения функции
+        if (fy <= fz)
+        {
+            b = z;
+
+            z = y;
+            fz = fy;
+
+            y = a + k * (b - a);
+            fy = f(y);
+        }
+        else
+        {
+            a = y;
+
+            y = z;
+            fy = fz;
+
+            z = a + b - y;
+            fz = f(z);
+        }
+
+        N++;
+
+        // Длина нового интервала
+        double l_k = b - a;
+
+        cout << "Новый интервал : ["
+             << a << "; " << b << "]" << endl;
+
+        cout << "l_k = " << l_k << endl;
+
+        // Условие остановки
+        if (l_k <= l)
+        {
+            break;
+        }
+    }
+
+    return (a + b) / 2.0;
+}
+
+int main()
+{
+    double a0 = -1.0;
+    double b0 = 9.0;
+
+    double l = 1.0;
+
+    cout << fixed << setprecision(4);
+
+    cout << "Метод золотого сечения" << endl;
+    cout << "Функция : f(x) = 2x^2 - 2x + 2.5" << endl;
+    cout << "Начальный интервал : ["
+         << a0 << "; " << b0 << "]" << endl;
+    cout << "Точность l = " << l << endl;
+
+    int N;
+
+    double x_min = golden_section(
+        a0, b0, l, N
+    );
+
+    double f_min = f(x_min);
+
+    // Сходимость
+    double R = pow(0.618, N - 1);
+
+    cout << "\nРЕЗУЛЬТАТ" << endl;
+
+    cout << "x* = " << x_min << endl;
+    cout << "f(x*) = " << f_min << endl;
+    cout << "Количество итераций N = " << N << endl;
+    cout << "Сходимость R_N = " << R << endl;
+
+    return 0;
+}
