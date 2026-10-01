@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+double f(double x) {
+    return 2.0 * x * x - 2.0 * x + 2.5;
+}
+
+vector<long long> fibonacci(int n) {
+    vector<long long> F(n + 1);
+    F[0] = 1;
+    if (n >= 1) F[1] = 1;
+    for (int i = 2; i <= n; ++i)
+        F[i] = F[i - 1] + F[i - 2];
+    return F;
+}
+
+int main() {
+    double a = -1.0, b = 9.0;
+    double l = 1.0;
+    double eps = 0.05;
+
+    // Шаг 2 : выбор N
+    int N = 1;
+    while (true) {
+        vector<long long> F = fibonacci(N);
+        if (F[N] >= (b - a) / l) break;
+        ++N;
+    }
+    vector<long long> F = fibonacci(N);
+
+    cout << fixed << setprecision(4);
+    cout << "N = " << N << ", F_N = " << F[N] << "\n";
+    cout << "L0 = [" << a << "; " << b << "], l = " << l << ", eps = " << eps << "\n\n";
+
+    // Шаг 3
+    int k = 0;
+    double a_k = a, b_k = b;
+
+    // Шаг 4
+    double y = a_k + (double)F[N - 2] / F[N] * (b_k - a_k);
+    double z = a_k + (double)F[N - 1] / F[N] * (b_k - a_k);
+
+    // Шаг 5
+    double f_y = f(y), f_z = f(z);
+
+    cout << "k = " << k << ": a = " << a_k << ", b = " << b_k << "\n";
+    cout << "  y = " << y << ", f(y) = " << f_y << "\n";
+    cout << "  z = " << z << ", f(z) = " << f_z << "\n\n";
+
+    // Шаги 6-7 : boucle principale
+    while (k < N - 3) {
+        double y_new, z_new;
+
+        if (f_y <= f_z) {
+            // Случай а)
+            b_k = z;
+            y_new = a_k + (double)F[N - k - 3] / F[N - k - 1] * (b_k - a_k);
+            z_new = y;
+        }
+        else {
+            // Случай б)
+            a_k = y;
+            y_new = z;
+            z_new = a_k + (double)F[N - k - 2] / F[N - k - 1] * (b_k - a_k);
+        }
+
+        y = y_new;
+        z = z_new;
+        f_y = f(y);
+        f_z = f(z);
+
+        ++k;
+
+        cout << "k = " << k << ": a = " << a_k << ", b = " << b_k << "\n";
+        cout << "  y = " << y << ", f(y) = " << f_y << "\n";
+        cout << "  z = " << z << ", f(z) = " << f_z << "\n\n";
+    }
+
+    // Шаг 7 б) : заключительное вычисление
+    ++k;
+
+    double y_final = (a_k + b_k) / 2.0;
+    double z_final = y_final + eps;
+
+    double f_yf = f(y_final);
+    double f_zf = f(z_final);
+
+    cout << "Финальный шаг (k = " << k << "):\n";
+    cout << "  y = " << y_final << ", f(y) = " << f_yf << "\n";
+    cout << "  z = " << z_final << ", f(z) = " << f_zf << "\n";
+
+    if (f_yf <= f_zf) {
+        b_k = z_final;
+    }
+    else {
+        a_k = y_final;
+    }
+
+    double x_star = (a_k + b_k) / 2.0;
+
+    cout << "\nКонечный интервал: [" << a_k << "; " << b_k << "]\n";
+    cout << "Длина: " << (b_k - a_k) << "\n";
+    cout << "Решение: x* = " << x_star << "\n";
+    cout << "f(x*) = " << f(x_star) << "\n";
+
+    return 0;
+}
