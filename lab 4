@@ -1,0 +1,185 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+// Функция
+double f(double x1, double x2)
+{
+    return 8.0 * x1 * x1 + x2 * x2 - x1 * x2 + x1;
+}
+
+// Частная производная по x1
+double df1(double x1, double x2)
+{
+    return 16.0 * x1 - x2 + 1.0;
+}
+
+// Частная производная по x2
+double df2(double x1, double x2)
+{
+    return 2.0 * x2 - x1;
+}
+
+// Функция phi(t)
+double phi(double t, double x1, double x2,
+    double g1, double g2)
+{
+    double x1_new = x1 - t * g1;
+    double x2_new = x2 - t * g2;
+
+    return f(x1_new, x2_new);
+}
+
+// Метод дихотомии для поиска t*
+double dichotomy(double x1, double x2,
+    double g1, double g2)
+{
+    double a = 0.0;
+    double b = 1.0;
+
+    double eps = 0.0002;
+    double l = 0.001;
+
+    while (b - a > l)
+    {
+        double y = (a + b - eps) / 2.0;
+        double z = (a + b + eps) / 2.0;
+
+        double fy = phi(y, x1, x2, g1, g2);
+        double fz = phi(z, x1, x2, g1, g2);
+
+        if (fy < fz)
+        {
+            b = z;
+        }
+        else if (fy > fz)
+        {
+            a = y;
+        }
+    }
+
+    return (a + b) / 2.0;
+}
+
+int main()
+{
+    cout << fixed << setprecision(5);
+
+    // Шаг 1
+    double x1 = 2.0;
+    double x2 = 2.0;
+
+    double eps1 = 0.1;
+    double eps2 = 0.15;
+    int M = 10;
+
+    // Шаг 2
+    int k = 0;
+
+    cout << "Метод наискорейшего спуска" << endl;
+    cout << "Поиск шага: метод дихотомии" << endl;
+
+    cout << "Функция:" << endl;
+    cout << "f(x1,x2) = 8x1^2 + x2^2 - x1*x2 + x1"
+        << endl;
+
+    cout << "\nНачальная точка:"
+        << endl;
+    cout << "x0 = (" << x1 << "; " << x2 << ")"
+        << endl;
+
+    while (true)
+    {
+        // Шаг 3
+        double g1 = df1(x1, x2);
+        double g2 = df2(x1, x2);
+
+        double grad_norm = sqrt(g1 * g1 + g2 * g2);
+
+        cout << endl << endl;
+        cout << "Итерация k = " << k << endl;
+        cout << "x = (" << x1 << "; " << x2 << ")"
+            << endl;
+        cout << "f(x) = " << f(x1, x2)
+            << endl;
+
+        cout << "grad f = ("
+            << g1 << "; " << g2 << ")"
+            << endl;
+
+        cout << "||grad f|| = "
+            << grad_norm << endl;
+
+        // Шаг 4
+        if (grad_norm < eps1)
+        {
+            cout << "\n||grad f|| < eps1" << endl;
+            cout << "Расчет окончен." << endl;
+            break;
+        }
+
+        // Шаг 5
+        if (k >= M)
+        {
+            cout << "\nk >= M" << endl;
+            cout << "Расчет окончен." << endl;
+            break;
+        }
+
+        // Шаг 6
+        double t = dichotomy(x1, x2, g1, g2);
+
+        cout << "t* = " << t << endl;
+
+        // Шаг 7
+        double x1_new = x1 - t * g1;
+        double x2_new = x2 - t * g2;
+
+        cout << "x(k+1) = ("
+            << x1_new << "; "
+            << x2_new << ")" << endl;
+
+        // Шаг 8
+        double dx = sqrt(
+            (x1_new - x1) * (x1_new - x1) +
+            (x2_new - x2) * (x2_new - x2)
+        );
+
+        double df = fabs(
+            f(x1_new, x2_new) - f(x1, x2)
+        );
+
+        cout << "||x(k+1) - x(k)|| = "
+            << dx << endl;
+
+        cout << "|f(x(k+1)) - f(x(k))| = "
+            << df << endl;
+
+        // Переход к следующей итерации
+        x1 = x1_new;
+        x2 = x2_new;
+
+        k++;
+
+        // Если оба дополнительных условия выполнены,
+        // продолжаем проверку градиента на следующей итерации.
+        if (dx < eps2 && df < eps2)
+        {
+            cout << "Дополнительные условия выполнены."
+                << endl;
+        }
+    }
+
+    cout << endl;
+    cout << "РЕЗУЛЬТАТ" << endl << endl;
+
+    cout << "x1* = " << x1 << endl;
+    cout << "x2* = " << x2 << endl;
+    cout << "f(x*) = " << f(x1, x2) << endl;
+    cout << "Количество итераций = "
+        << k << endl;
+
+    return 0;
+}
